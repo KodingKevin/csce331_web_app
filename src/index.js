@@ -27,11 +27,6 @@ process.on('SIGINT', function() {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.get('/', (req, res) => {
-    const data = {name: 'Mario'};
-    res.render('index', data);
-});
-
 app.get('/', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM teammembers;');
@@ -41,6 +36,20 @@ app.get('/', async (req, res) => {
         });
     } catch (error) {
         console.error('Database error:', error);
+        res.status(500).send('Database error');
+    }
+});
+app.get('/user', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM teammembers;');
+
+        const teammembers = result.rows;
+        const data = { teammembers: teammembers };
+
+        console.log(teammembers);
+        res.render('user', data);
+    } catch (error) {
+        console.error('Database query error:', error);
         res.status(500).send('Failed to load team members');
     }
 });
