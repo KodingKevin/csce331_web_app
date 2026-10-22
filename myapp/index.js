@@ -22,7 +22,7 @@ process.on('SIGINT', function() {
     console.log('Application successfully shutdown');
     process.exit(0);
 });
-
+	 	 	 	
 app.set("view engine", "ejs");
 
 app.get('/', (req, res) => {
@@ -40,10 +40,19 @@ app.get('/user', (req, res) => {
             }
             const data = {teammembers: teammembers};
             console.log(teammembers);
-            res.render('user', data);        
+            res.render('user', data);
         });
 });
 
+app.get('/db-test', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT NOW()');
+        res.send('PostgreSQL connected successfully!');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Database connection failed');
+    }
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
