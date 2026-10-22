@@ -32,17 +32,15 @@ app.get('/', (req, res) => {
     res.render('index', data);
 });
 
-app.get('/user', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM teammembers;');
 
-        const teammembers = result.rows;
-        const data = { teammembers: teammembers };
-
-        console.log(teammembers);
-        res.render('user', data);
+        res.render('user', {
+            teammembers: result.rows
+        });
     } catch (error) {
-        console.error('Database query error:', error);
+        console.error('Database error:', error);
         res.status(500).send('Failed to load team members');
     }
 });
